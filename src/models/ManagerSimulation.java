@@ -2,6 +2,8 @@ package models;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 public class ManagerSimulation {
     private ArrayList<Partition> partitions;
@@ -158,9 +160,11 @@ public void copy(){
         int count=1;
         while (partitions.size() > 1) {
            prosesar();
+
             boolean s= false;
             boolean f= false;
-
+           // Collections.sort(partitions);
+            this.recolectorDeBasura();
             for (int i = 0; i < partitions.size(); i++) {
 
                 Partition particionActual = partitions.get(i);
@@ -279,6 +283,42 @@ public void copy(){
                     partition.setName("hueco"/*/"+partition.getPartitionSize()*/);
                 }
             }
+        }
+    }
+    public void recolectorDeBasura(){
+        long contador=0;
+        List<Partition> partitionsToAdd = new ArrayList<>();
+        List<Partition> partitionsToRemove = new ArrayList<>();
+        boolean f= false;
+        for (Partition p : partitions) {
+            boolean cd = false;
+           
+            if(p.getProcessSimulations().getTime()>0){
+                f=true;
+            }
+            if (p.getProcessSimulations().getTime() <= 0&&f) {
+                Partition pa = new Partition(p.getName(), p.getPartitionSize(), new ProcessSimulation(p.getProcessSimulations().getProcesName(), p.getProcessSimulations().getTime(), p.getProcessSimulations().getSize()), p.getLowerLimit(), p.getHighLimit());
+                for (Partition ps : partitions) {
+                    if (ps.getProcessSimulations().getTime() <= 0 && !cd) {
+                        partitionsToAdd.add(pa);
+                        partitionsToRemove.add(p);
+                        cd = true;
+                    }
+                }
+            }
+        }
+
+
+        partitions.removeAll(partitionsToRemove);
+        partitions.addAll(partitionsToAdd);
+        for (Partition p:partitions  ) {
+            System.out.println("_____"+p.getName() +" "+ p.getPartitionSize()+"  llllllllllllllllllll    "+p.getProcessSimulations().toString());
+        } System.out.println("\n\n");
+        for (Partition p :partitions) {
+            p.setLowerLimit(contador);
+            long a = p.getLowerLimit()+p.getPartitionSize();
+            p.setHighLimit(a);
+            contador=a;
         }
     }
 
