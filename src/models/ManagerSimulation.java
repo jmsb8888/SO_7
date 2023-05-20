@@ -87,9 +87,21 @@ public class ManagerSimulation {
     public String getReportCondensacion() {
         String report = "";
         for (FormatReportPartitions frp : reportCondensacion) {
-            if(frp.getName()!=null){
+            if(frp.getName()!=null&& frp.getHighLimit()!=-111){
                 report += frp.toString();
-            }else{
+            } else if (frp.getName()!=null&& frp.getHighLimit()==-111) {
+                int spac= frp.getName().length();
+                int total= 30;
+                if(spac==3)total=total+4;
+                if(spac==2)total=total+6;
+                if(spac==4)total=total+3;
+                if(spac==6)total=total+2;
+                String sapce="";
+                for (int i = 0; i < total-spac; i++) {
+                    sapce +=" ";
+                }
+                report += frp.getName()+sapce+frp.getSizePartition()+"\n";
+            } else{
                 report+=frp.getSeparator()+"\n";
             }
 
@@ -140,7 +152,7 @@ public void copy(){
         for (Partition ps: partitions) {
             FormatReportPartitions frp= new FormatReportPartitions(ps.getName(), ps.getPartitionSize(), ps.getLowerLimit(), ps.getHighLimit());
             reportPartition.add(frp);
-        }reportPartition.add(new FormatReportPartitions());
+        }reportPartition.add(new FormatReportPartitions(true));
     }
 
     public void assignArrayReports(){
@@ -163,10 +175,11 @@ public void copy(){
 
             boolean s= false;
             boolean f= false;
+            boolean k= false;
            // Collections.sort(partitions);
             this.recolectorDeBasura();
             for (int i = 0; i < partitions.size(); i++) {
-
+                int aux=0;
                 Partition particionActual = partitions.get(i);
                 Partition particionAnterior = (i > 0) ? partitions.get(i - 1) : null;
                 if (particionActual.getProcessSimulations().getTime()<=0){
@@ -179,16 +192,18 @@ public void copy(){
                         Partition nuevaParticion = new Partition(nuevoNombre, nuevoTamanio,  new ProcessSimulation(nuevoNombre, 0, nuevoTamanio), particionAnterior.getLowerLimit(), particionActual.getHighLimit());
                         if(!f) {
                             partitions.set(i, nuevaParticion);
-                            reportCondensacion.add(new FormatReportPartitions(particionAnterior.getProcessSimulations().getProcesName(), particionAnterior.getProcessSimulations().getSize(), 0, 0));
-                            reportCondensacion.add(new FormatReportPartitions(particionActual.getProcessSimulations().getProcesName(), particionActual.getProcessSimulations().getSize(), 0, 0));
+                            reportCondensacion.add(new FormatReportPartitions(particionAnterior.getProcessSimulations().getProcesName(), particionAnterior.getProcessSimulations().getSize()));
+                            reportCondensacion.add(new FormatReportPartitions(particionActual.getProcessSimulations().getProcesName(), particionActual.getProcessSimulations().getSize()));
                             FormatReportPartitions g=new FormatReportPartitions(nuevaParticion.getName(), nuevaParticion.getPartitionSize(), nuevaParticion.getLowerLimit(), nuevaParticion.getHighLimit());
 
                                     reportCondensacion.add(g);
+                                  reportCondensacion.add(new FormatReportPartitions(false));
                                     partitions.remove(i - 1);
                                     i--;
                                     s = true;
                                     f = false;
                                     count++;
+                                    k=true;
 
                           /*  if( !reportCondensacion.contains(g)) {
 
@@ -205,25 +220,28 @@ public void copy(){
                         Partition nuevaParticion = new Partition(nuevoNombre, nuevoTamanio, new ProcessSimulation(nuevoNombre, 0, nuevoTamanio), particionActual.getLowerLimit(), particionSiguiente.getHighLimit());
                         if(!f) {
 
-                            reportCondensacion.add(new FormatReportPartitions(particionActual.getProcessSimulations().getProcesName(), particionActual.getProcessSimulations().getSize(), 0, 0));
-                            reportCondensacion.add(new FormatReportPartitions(particionSiguiente.getProcessSimulations().getProcesName(), particionSiguiente.getProcessSimulations().getSize(), 0, 0));
+                            reportCondensacion.add(new FormatReportPartitions(particionActual.getProcessSimulations().getProcesName(), particionActual.getProcessSimulations().getSize()));
+                            reportCondensacion.add(new FormatReportPartitions(particionSiguiente.getProcessSimulations().getProcesName(), particionSiguiente.getProcessSimulations().getSize()));
 
                             partitions.remove(i + 1);
                             partitions.set(i, nuevaParticion);
                             FormatReportPartitions hj= new FormatReportPartitions(nuevaParticion.getName(), nuevaParticion.getPartitionSize(), nuevaParticion.getLowerLimit(), nuevaParticion.getHighLimit());
 
                             reportCondensacion.add(hj);
+                          reportCondensacion.add(new FormatReportPartitions(false));
                             s = true;
                             f=false;
                             count++;
+                            k=true;
                         }
                     }
 
                 }
             }
+
             if(s){
 
-                    reportCondensacion.add(new FormatReportPartitions());
+                    reportCondensacion.add(new FormatReportPartitions(true));
 
                 s=false;
             }
@@ -242,7 +260,7 @@ public void copy(){
         result += "\n\n\n*********************  REPORTE DE PARTICIONES" + " ********************\n";
         result += "Nombre        Tamaño        D. INFERIOR        D. SUPERIOR \n";
         result+=this.getReportPartition();
-        result += "\n\n\n*********************  REPORTE DE CONDENSACIONES" + " ********************\n";
+        result += "\n\n\n*********************  REPORTE DE PARTICIONES VACIAS" + " ********************\n";
         result += "Nombre        Tamaño        D. INFERIOR        D. SUPERIOR \n";
         result+=this.getReportCondensacion();
         result+="\n\n\n******************* ORDEN TERMINACION PARTICIONES: ******************\n";
@@ -287,33 +305,29 @@ public void copy(){
     }
     public void recolectorDeBasura(){
         long contador=0;
-        List<Partition> partitionsToAdd = new ArrayList<>();
-        List<Partition> partitionsToRemove = new ArrayList<>();
-        boolean f= false;
-        for (Partition p : partitions) {
-            boolean cd = false;
-           
-            if(p.getProcessSimulations().getTime()>0){
-                f=true;
-            }
-            if (p.getProcessSimulations().getTime() <= 0&&f) {
-                Partition pa = new Partition(p.getName(), p.getPartitionSize(), new ProcessSimulation(p.getProcessSimulations().getProcesName(), p.getProcessSimulations().getTime(), p.getProcessSimulations().getSize()), p.getLowerLimit(), p.getHighLimit());
-                for (Partition ps : partitions) {
-                    if (ps.getProcessSimulations().getTime() <= 0 && !cd) {
-                        partitionsToAdd.add(pa);
-                        partitionsToRemove.add(p);
-                        cd = true;
-                    }
-                }
+        List<Partition> partitionsTErninated = new ArrayList<>();
+        List<Partition> partitionaNoTerminte = new ArrayList<>();
+
+        for (Partition particion : partitions) {
+            ProcessSimulation p= particion.getProcessSimulations();
+            Partition aux = new Partition(particion.getName(), particion.getPartitionSize(), new ProcessSimulation(p.getProcesName(), p.getTime(), p.getSize()),particion.getLowerLimit(), particion.getHighLimit());
+            if (particion.getProcessSimulations().getTime() == 0) {
+                partitionsTErninated.add(aux);
+            } else {
+                partitionaNoTerminte.add(aux);
             }
         }
+        partitions.clear();
+        partitions.addAll(partitionaNoTerminte);
+        if(partitions.size()>0&& partitions.get(partitions.size()-1).getProcessSimulations().getTime()!=0&& partitionsTErninated.size()==1 ){
+            for (Partition p: partitionsTErninated) {
+                reportCondensacion.add(new FormatReportPartitions(p.getProcessSimulations().getProcesName(), p.getProcessSimulations().getSize()));
+                FormatReportPartitions hj= new FormatReportPartitions(p.getName(), p.getPartitionSize(), p.getLowerLimit(), p.getHighLimit());
+                reportCondensacion.add(hj);
+            }reportCondensacion.add(new FormatReportPartitions(true));
+        }
+        partitions.addAll(partitionsTErninated);
 
-
-        partitions.removeAll(partitionsToRemove);
-        partitions.addAll(partitionsToAdd);
-        for (Partition p:partitions  ) {
-            System.out.println("_____"+p.getName() +" "+ p.getPartitionSize()+"  llllllllllllllllllll    "+p.getProcessSimulations().toString());
-        } System.out.println("\n\n");
         for (Partition p :partitions) {
             p.setLowerLimit(contador);
             long a = p.getLowerLimit()+p.getPartitionSize();

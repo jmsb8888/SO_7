@@ -48,6 +48,7 @@ public class ProcessSimulation implements Comparable<ProcessSimulation> {
 
        int spac= procesName.length();
        int total= 20;
+       if(spac==2)total=total+1;
        String sapce="";
        for (int i = 0; i < total-spac; i++) {
            sapce +=" ";

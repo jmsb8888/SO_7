@@ -13,6 +13,12 @@ public class FormatReportPartitions {
         this.lowerLimit = lowerLimit;
         this.highLimit = highLimit;
     }
+    public FormatReportPartitions(String name, long sizePartition) {
+        this.name = name;
+        this.sizePartition = sizePartition;
+        this.lowerLimit = -111;
+        this.highLimit = -111;
+    }
 
     public String getSeparator() {
         return separator;
@@ -22,8 +28,12 @@ public class FormatReportPartitions {
         this.separator = separator;
     }
 
-    public FormatReportPartitions() {
-        separator="-----------------------------------------------------------------------------------------------";
+    public FormatReportPartitions(boolean f) {
+        if(f) {
+            separator = "-----------------------------------------------------------------------------------------------";
+        }else{
+            separator="*************************************************";
+        }
     }
 
     public long getLowerLimit() {
@@ -62,8 +72,13 @@ public class FormatReportPartitions {
 
         long spac = name.length();
         long total = 30;
+        if(spac==8)total=total+2;
+        if(spac==5)total=total+3;
+        if(spac==6)total=total+2;
+        if(spac==10)total=total-1;
+        if(spac==9)total=total+1;
         String sapce = "";
-        System.out.println(name+ " "+(total-spac));
+  //      System.out.println(name+ " "+(total-spac));
         for (int i = 0; i < total - spac; i++) {
             sapce += " ";
         }
@@ -81,7 +96,7 @@ public class FormatReportPartitions {
        // System.out.println(val+ " "+String.valueOf(val).length());
 
         String sapce="";
-         System.out.println(val+ " "+(total-spac));
+    //     System.out.println(val+ " "+(total-spac));
         for (int i = 0; i < total-spac; i++) {
             sapce +=" ";
         }

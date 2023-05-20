@@ -31,7 +31,7 @@ public class test {
       //  ps.add(p4);
         //ps.add(p5);*/
 
-        ProcessSimulation P11= new ProcessSimulation("P11" ,5 ,11);
+        ProcessSimulation P11= new ProcessSimulation("P158" ,5 ,128);
         ProcessSimulation P15= new ProcessSimulation( "P15" ,7, 15);
         ProcessSimulation P18= new ProcessSimulation("P18" ,8 ,18);
         ProcessSimulation P6= new ProcessSimulation( "P6" ,3 ,6);
