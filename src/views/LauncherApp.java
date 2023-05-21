@@ -109,9 +109,7 @@ public class LauncherApp extends javax.swing.JFrame {
     private void restartSimulation() {
         processSimulationList = new ArrayList<>();
         managerSimulation = new ManagerSimulation(this.processSimulationList, 1);
-
         this.cleanCellsProcess();
-
         this.initializeTableProcess();
     }
 
@@ -480,7 +478,7 @@ public class LauncherApp extends javax.swing.JFrame {
         } else {
             for (ProcessSimulation processSimulation : processSimulationList) {
                 if (processSimulation.getProcesName().equals(txtNameProcess.getText())) {
-                    JOptionPane.showMessageDialog(null, "El nombre del proceso que desea agregar ya existe", "ERROR AL CREAR EL PROCESO", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "El nombre del proceso que desea agregar, ya existe", "ERROR AL CREAR EL PROCESO", JOptionPane.ERROR_MESSAGE);
                     this.cleanCellsProcess();
                     return;
                 }
