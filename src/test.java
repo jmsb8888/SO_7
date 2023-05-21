@@ -18,40 +18,55 @@ import static com.itextpdf.kernel.pdf.tagging.StandardRoles.TITLE;
 
 public class test {
     public static void main(String[] args) {
-   /*     ProcessSimulation p1= new ProcessSimulation("p1", 2, 10);
-        ProcessSimulation p2= new ProcessSimulation("p2", 1, 9);
-        ProcessSimulation p3= new ProcessSimulation("p3", 1, 11);
-      // ProcessSimulation p4= new ProcessSimulation("p4", 4, 5);
+      ProcessSimulation p1= new ProcessSimulation("p1", 10, 10);
+        ProcessSimulation p2= new ProcessSimulation("p2", 5, 15);
+        ProcessSimulation p3= new ProcessSimulation("p3", 15, 10);
+       ProcessSimulation p4= new ProcessSimulation("p4", 4, 5);
         //ProcessSimulation p5= new ProcessSimulation("p5", 5, 15);
 
-        ArrayList<ProcessSimulation> ps= new ArrayList<>();
+     /*   ArrayList<ProcessSimulation> ps= new ArrayList<>();
         ps.add(p1);
         ps.add(p2);
         ps.add(p3);
       //  ps.add(p4);
         //ps.add(p5);*/
 
-        ProcessSimulation P11= new ProcessSimulation("P158" ,5 ,128);
+        ProcessSimulation P11= new ProcessSimulation("P11" ,5 ,11);
         ProcessSimulation P15= new ProcessSimulation( "P15" ,7, 15);
         ProcessSimulation P18= new ProcessSimulation("P18" ,8 ,18);
         ProcessSimulation P6= new ProcessSimulation( "P6" ,3 ,6);
         ProcessSimulation P9= new ProcessSimulation("P9" ,4, 9);
         ProcessSimulation P20= new ProcessSimulation("P20" ,2 ,20);
         ProcessSimulation P13= new ProcessSimulation("P13" ,3, 13);
+        ProcessSimulation P14= new ProcessSimulation("P14" ,2, 14);
       /*  ProcessSimulation p8= new ProcessSimulation("p8", 7, 15);
         ProcessSimulation p9= new ProcessSimulation("p9", 4, 14);
         ProcessSimulation p10= new ProcessSimulation("p10", 3, 7);*/
         ArrayList<ProcessSimulation> ps= new ArrayList<>();
-        ps.add(P11);
+
+
+
+     //prueba yop
+     ps.add(P11);
         ps.add(P15);
         ps.add(P18);
         ps.add(P6);
         ps.add(P9);
         ps.add(P20);
         ps.add(P13);
+       // ps.add(P14);
+
+
        /* ps.add(p8);
         ps.add(p9);
         ps.add(p10);*/
+/*
+//prueba andrea
+
+        ps.add(p1);
+        ps.add(p2);
+        ps.add(p3);
+        ps.add(p4);*/
 
 
 
